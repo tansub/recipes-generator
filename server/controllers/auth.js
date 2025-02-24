@@ -9,8 +9,8 @@ export const register = async (req, res) => {
     const isUsed = await User.findOne({ username });
 
     if (isUsed) {
-      return res.status(402).json({
-        message: "Username already exists",
+      return res.json({
+        message: "This username is already in use. Please choose a different one.",
       });
     }
 
@@ -34,11 +34,11 @@ export const register = async (req, res) => {
 
     res.json({
       newUser,
-      message: "Registration was succesful",
+      message: "Your registration was successful.",
     });
   } catch (error) {
     res.json({
-      message: "Error while creating user",
+      message: "An error occurred while creating the user.",
     });
   }
 };
@@ -50,14 +50,14 @@ export const login = async (req, res) => {
 
     if (!user) {
       return res.json({
-        message: "This username does not exist",
+        message: "This username was not found.",
       });
     }
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
 
     if (!isPasswordCorrect) {
       return res.json({
-        message: "Wrong password",
+        message: "The password you entered is incorrect.",
       });
     }
 
@@ -70,10 +70,10 @@ export const login = async (req, res) => {
     );
 
     res.json({
-        token, user, message: 'Logged in succesfully'
+        token, user, message: 'You have successfully logged in.'
     })
   } catch (error) {
-    res.json({ message: "Error during authentication" });
+    res.json({ message: "An error occurred during authentication." });
   }
 };
 // get me
@@ -83,7 +83,7 @@ export const getMe = async (req, res) => {
 
     if (!user) {
         return res.json({
-          message: "This username does not exist",
+          message: "This username does not exist.",
         });
       }
 
@@ -98,7 +98,7 @@ export const getMe = async (req, res) => {
       res.json({user, token})
   } catch (error) {
     res.json({
-        message: "Access restricted"
+        message: "Access restricted."
     })
   }
 };
