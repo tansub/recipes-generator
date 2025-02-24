@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: "Lexend Deca", serif;
+    /* background: -webkit-linear-gradient(to right, #243B55, #141E30);  */
+    background: #FBF5E5; 
+    min-height: 100h;
+  }
+  
+}
+
