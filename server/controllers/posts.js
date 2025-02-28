@@ -1,5 +1,7 @@
 import Post from "../models/Post.js";
 // import User from "../models/User.js";
+import mongoose from "mongoose";
+
 
 // create post
 export const createPost = async (req, res) => {
@@ -94,30 +96,19 @@ export const removePost = async (req, res) => {
 // update post
 export const updatePost = async (req, res) => {
     try {
-      console.log("Received update request for ID:", req.params.id);
-      console.log("Request Body:", req.body);
-  
       const { title, description, ingredients, instructions } = req.body;
       const { id } = req.params;
   
       if (!mongoose.Types.ObjectId.isValid(id)) {
-        console.error("Invalid ID:", id);
         return res.status(400).json({ message: "Invalid post ID format" });
       }
   
+      // finsing post by id
       const post = await Post.findById(id);
       if (!post) {
-        console.error("Post not found with ID:", id);
         return res.status(404).json({ message: "Post not found" });
       }
   
-      // Ensure only the owner can update
-      if (post.userId.toString() !== req.userId) {
-        console.error("Unauthorized update attempt by user:", req.userId);
-        return res.status(403).json({ message: "You can only update your own posts" });
-      }
-  
-      // Update the post
       post.title = title || post.title;
       post.description = description || post.description;
       post.ingredients = ingredients || post.ingredients;
@@ -128,8 +119,7 @@ export const updatePost = async (req, res) => {
       console.log("Post updated successfully:", post);
       res.status(200).json(post);
     } catch (error) {
-      console.error("Error updating post:", error);
-      res.status(500).json({ message: "Something went wrong" });
+      res.status(500).json({ message: "Something went wrong", error: error.message });
     }
   };
   

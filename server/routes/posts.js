@@ -20,7 +20,6 @@ router.post('/', checkAuth, createPost)
 router.get('/:id', getById)
 
 // update post
-// http://localhost:3003/api/post/:id
 router.put('/:id', checkAuth, updatePost)
 
 // get posts
