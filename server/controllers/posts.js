@@ -50,7 +50,6 @@ export const getById = async (req, res) => {
     try {
       const post = await Post.findByIdAndUpdate(
         req.params.id,
-        { $inc: { views: 1 } },
         { new: true }
       );
       if (!post) return res.status(404).json({ message: "Post not found" });

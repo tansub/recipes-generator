@@ -3,7 +3,6 @@ import axios from "../../../utils/axios";
 
 const initialState = {
   posts: [],
-  popularPosts: [],
   loading: false,
   error: null,
   selectedPost: null,
