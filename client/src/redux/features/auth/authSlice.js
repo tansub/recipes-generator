@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../../utils/axios";
 const initialState = {
   user: null,
-  token: localStorage.getItem("token") || null,
+  token: null,
   isLoading: false,
   status: null,
 };
@@ -10,21 +10,19 @@ const initialState = {
 // register
 export const registerUser = createAsyncThunk(
   "auth/registerUser",
-  async ({ username, password }) => {
+  async ({ username, password }, { rejectWithValue }) => {
     try {
-      const { data } = await axios.post("/auth/register", {
-        username,
-        password,
-      });
+      const { data } = await axios.post("/auth/register", { username, password });
       if (data.token) {
-        window.localStorage.setItem("token", data.token);
+        localStorage.setItem("token", data.token);
       }
       return data;
     } catch (error) {
-      console.log(error);
+      return rejectWithValue(error.response?.data || "Registration failed");
     }
   }
 );
+
 
 // login
 export const loginUser = createAsyncThunk(
@@ -50,7 +48,7 @@ export const getMe = createAsyncThunk(
   "auth/getMe",
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await axios.post("auth/getme"); // clearly matches backend
+      const { data } = await axios.post("auth/getme"); 
       return data;
     } catch (error) {
       return rejectWithValue(error.response?.data || "Failed to fetch user data");
@@ -67,6 +65,7 @@ export const authSlice = createSlice({
       state.token = null;
       state.isLoading = false;
       state.status = null;
+      localStorage.removeItem("token");
     },
   },
   extraReducers: (builder) => {
@@ -122,5 +121,5 @@ export const authSlice = createSlice({
 });
 
 export const {logout} = authSlice.actions
-export const checkIsAuth = (state) => Boolean(state.auth.token);
+export const checkIsAuth = (state) => Boolean(state.auth.token)
 export default authSlice.reducer;

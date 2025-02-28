@@ -1,33 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { registerUser } from "../redux/features/auth/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { registerUser, checkIsAuth } from "../redux/features/auth/authSlice";
 import { toast } from "react-toastify";
 
 export const RegisterPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const isAuth = useSelector(checkIsAuth);
+  const { status, user } = useSelector((state) => state.auth); 
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleSubmit = async () => {
-    if (!username || !password) {
-      toast.warn("Please fill in both fields");
-      return;
+  useEffect(() => {
+    if (status) {
+      toast(status);
     }
-
-    const resultAction = await dispatch(registerUser({ username, password }));
-
-    if (registerUser.fulfilled.match(resultAction)) {
-      toast.success("Registration successful");
+    if (isAuth) {
       navigate("/"); 
-    } else {
-      toast.error(resultAction.payload?.message || "Registration failed");
     }
+  }, [status, isAuth, navigate]);
 
-    setUsername("");
-    setPassword("");
+  // form submission
+  const handleSubmit = async () => {
+    try {
+      const resultAction = await dispatch(registerUser({ username, password })).unwrap();
+      
+      if (resultAction.user) {
+        toast.success("Registration successful!", {
+          position: "bottom-right",
+        });
+        navigate("/add-recipe"); 
+      }
+
+      setPassword("");
+      setUsername("");
+    } catch (error) {
+      console.error(error);
+      toast.error("Registration failed", { position: "bottom-right" });
+    }
   };
 
   return (
@@ -46,7 +58,7 @@ export const RegisterPage = () => {
           placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          className="mt-1 mb-3 text-white w-full h-10 rounded-lg bg-tapestry-600 border py-1 px-2 outline-none placeholder:text-white"
+          className="mt-1 mb-3 text-white w-full h-10 rounded-lg bg-chestnut-rose-600 border py-1 px-2 outline-none placeholder:text-white"
         />
       </label>
 
@@ -57,20 +69,20 @@ export const RegisterPage = () => {
           value={password}
           placeholder="Password"
           onChange={(e) => setPassword(e.target.value)}
-          className="mt-1 mb-3 text-white w-full h-10 rounded-lg bg-tapestry-600 border py-1 px-2 outline-none placeholder:text-white"
+          className="mt-1 mb-3 text-white w-full h-10 rounded-lg bg-chestnut-rose-600 border py-1 px-2 outline-none placeholder:text-white"
         />
       </label>
 
       <div className="flex gap-8 justify-center mt-4">
         <button
           type="submit"
-          className="flex justify-center items-center text-xs text-white rounded-sm py-2 px-4 bg-tapestry-950"
+          className="flex justify-center items-center text-xs text-white rounded-sm py-2 px-4 bg-chestnut-rose-900"
         >
           Sign up
         </button>
         <Link
           to="/login"
-          className="flex justify-center items-center text-xs text-tapestry-950"
+          className="flex justify-center items-center text-xs text-chestnut-rose-900"
         >
           I already have an account
         </Link>

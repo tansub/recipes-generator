@@ -9,16 +9,18 @@ export const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  // authentication status from Redux store
   const { status } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isAuth = useSelector(checkIsAuth);
 
   useEffect(() => {
-    if (status) toast.success(status);
+    if (status) toast(status);
     if (isAuth) navigate("/");
   }, [status, isAuth, navigate]);
 
+  // handle login
   const handleSubmit = () => {
     try {
       dispatch(loginUser({ username, password }));
@@ -33,7 +35,7 @@ export const LoginPage = () => {
       onSubmit={(e) => e.preventDefault()}
       className="w-1/4 h-60 mx-auto mt-40"
     >
-      <h1 className="text-3xl text-tapestry-900 mb-4 text-center">
+      <h1 className="text-3xl text-chestnut-rose-600 mb-4 text-center">
         Sign in to your account
       </h1>
       <label className="text-xs text-gray-400">
@@ -43,7 +45,7 @@ export const LoginPage = () => {
           placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          className="mt-1 mb-3 text-white w-full h-10 rounded-lg bg-tapestry-600 border py-1 px-2 text-s outline-none placeholder:text-white"
+          className="mt-1 mb-3 text-white w-full h-10 rounded-lg bg-chestnut-rose-600 border py-1 px-2 text-s outline-none placeholder:text-white"
         />
       </label>
 
@@ -54,7 +56,7 @@ export const LoginPage = () => {
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="mt-1 text-white w-full h-10 rounded-lg bg-tapestry-600 border py-1 px-2 text-s outline-none placeholder:text-white"
+          className="mt-1 text-white w-full h-10 rounded-lg bg-chestnut-rose-600 border py-1 px-2 text-s outline-none placeholder:text-white"
         />
       </label>
 
@@ -62,13 +64,13 @@ export const LoginPage = () => {
         <button
           type="submit"
           onClick={handleSubmit}
-          className="flex justify-center items-center text-xs text-white rounded-sm py-2 px-4 bg-tapestry-950"
+          className="flex justify-center items-center text-xs text-white rounded-sm py-2 px-4 bg-chestnut-rose-900"
         >
           Sign in
         </button>
         <Link
           to={"/register"}
-          className="flex justify-center items-center text-xs text-tapestry-950"
+          className="flex justify-center items-center text-xs text-chestnut-rose-900"
         >
           Create new account
         </Link>

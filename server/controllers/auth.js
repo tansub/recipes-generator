@@ -10,7 +10,8 @@ export const register = async (req, res) => {
 
     if (isUsed) {
       return res.json({
-        message: "This username is already in use. Please choose a different one.",
+        message:
+          "This username is already in use. Please choose a different one.",
       });
     }
 
@@ -34,6 +35,7 @@ export const register = async (req, res) => {
 
     res.json({
       newUser,
+      token,
       message: "Your registration was successful.",
     });
   } catch (error) {
@@ -70,8 +72,10 @@ export const login = async (req, res) => {
     );
 
     res.json({
-        token, user, message: 'You have successfully logged in.'
-    })
+      token,
+      user,
+      message: "You have successfully logged in.",
+    });
   } catch (error) {
     res.json({ message: "An error occurred during authentication." });
   }
@@ -79,26 +83,26 @@ export const login = async (req, res) => {
 // get me
 export const getMe = async (req, res) => {
   try {
-    const user = await User.findById(req.userId)
+    const user = await User.findById(req.userId);
 
     if (!user) {
-        return res.json({
-          message: "This username does not exist.",
-        });
-      }
+      return res.json({
+        message: "This username does not exist.",
+      });
+    }
 
-      const token = jwt.sign(
-        {
-          id: user._id,
-        },
-        process.env.JWT_SECRET,
-        { expiresIn: "30d" }
-      );
+    const token = jwt.sign(
+      {
+        id: user._id,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "30d" }
+    );
 
-      res.json({user, token})
+    res.json({ user, token });
   } catch (error) {
     res.json({
-        message: "Access restricted."
-    })
+      message: "Access restricted.",
+    });
   }
 };
